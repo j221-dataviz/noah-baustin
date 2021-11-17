@@ -12,7 +12,6 @@ This project will also utilize population data published by the US Census. Here 
 - What was the per capita number of marijuana felony and misdemeanor arrests in California from 2000 through 2020?
 - What portion of the total drug crime arrests were marijuana crimes from 2000 through 2020?
 - How have the age demographics of who was arrested for marijuana crimes changed over time 2000 to 2020?
-- How the racial demographics of who was arrested for marijuana crimes changed over time from 2000 to 2020?
 
 ***Data Key***
 The data for this project is saved in the 'data' folder. The arrest data is stored in the 'csv_exports' folder. Each subfolder contains a series of csv's. Each csv draws from the same table, pulled from a different annual 'Crime in California' report.
