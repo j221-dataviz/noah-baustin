@@ -1,3 +1,7 @@
+####### DO NOT RUN THIS SCRIPT AGAIN ###########
+#This was the script that originally parsed the data into condensed .csv's.
+
+
 # set working directory to the folder containing this script
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 

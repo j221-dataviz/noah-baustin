@@ -5,6 +5,11 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(tidycensus)
 library(tidyverse)
 library(ggplot2)
+library(plotly)
+library(htmlwidgets)
+
+#prevent scientific notation
+options(scipen=999)
 
 # only need to run this one to install your census api key in REnviron
 #census_api_key("09a9edd9b1fa04af9fa3f415d4bb68ba7b0077fa", install = TRUE, overwrite=TRUE)
@@ -12,6 +17,88 @@ library(ggplot2)
 #read in csv's
 mari_misdemeanor_total <- read_csv("./processed_data/ca_misdemeanor_category_age.csv")
 mari_felony_total <- read_csv("./processed_data/ca_felony_category.csv")
+
+#create dataframe with total number of misdemeanor marijuana arrests per year
+mari_mis_per_year <- mari_misdemeanor_total %>%
+  filter(category == "Marijuana") %>%
+  mutate(group = c("total_marijuana")) %>%
+  select(total, year, group)
+
+#create dataframe with total number of misdemeanor drug arrests per year NOT including marijuana
+drug_mis_per_year <- mari_misdemeanor_total %>%
+  filter(category == "Other drug") %>%
+  mutate(group = c("total_drug_no_mari")) %>%
+  select(total, year, group)
+
+#create dataframe with total number of felony marijuana arrests per year
+mari_felony_per_year <- mari_felony_total %>%
+  mutate(total = marijuana) %>%
+  mutate(group = c("total_marijuana")) %>%
+  select(total, year, group)
+
+#create dataframe with total number of felony drug arrests per year NOT including marijuana
+drug_felon_per_year <- mari_felony_total %>%
+  mutate(total = drug_offenses - marijuana) %>%
+  mutate(group = c("total_drug_no_mari")) %>%
+  select(total, year, group)
+
+#bind our dataframes so we have the totals for marijuana arrests and total drug offenses in one dataframe.
+#Also, this pulls the data into the correct shape for the stacked bar chart in R. 
+annual_totals <- rbind(mari_mis_per_year, drug_mis_per_year, mari_felony_per_year, drug_felon_per_year) %>%
+  filter(year > 1999)
+view(annual_totals)
+
+##########################
+#Let's create our static stacked bar chart:
+#here's the reference for the stacked bar chart: https://r-charts.com/part-whole/stacked-bar-chart-ggplot2/
+#here's another reference for the chart: https://www.r-graph-gallery.com/48-grouped-barplot-with-ggplot2.html
+
+#create our stacked bar graph
+plot1 <- ggplot(annual_totals, 
+                aes(x = year, 
+                    y = total, 
+                    fill = group,
+                    text = paste0("<b>Year: </b>", year,"<br>",
+                                  "<b>Marijuana arrests: </b>", total, "<br>",
+                                  "<b>Other drug arrests: </b>", total)
+                    )) +
+  xlab("") +
+  ylab("Arrests") +
+  geom_bar(stat = "identity") +
+  theme_minimal(base_size = 14, base_family = "Arial") +
+  scale_fill_brewer(palette = "Set2",
+                    name = "",
+                    labels= c("Other drug arrests", "Marijuana arrests")
+                    ) +
+  theme(legend.position = "top",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()
+        ) +
+  #scale_y_continuous(labels = comma_format) +
+  scale_y_continuous(breaks = c(100000, 200000, 300000)) +
+  scale_x_continuous(limits=c(2000, 2020)) +
+  ggtitle("California Drug Arrests") 
+  #coord_flip()
+
+require(scales)
+plot1 + scale_y_continuous(labels = comma)
+
+######################
+#Let's create our interactive chart now
+ggplotly(plot1) %>% 
+  config(displayModeBar = FALSE) %>%
+  layout(xaxis = list(fixedrange = TRUE),
+         yaxis = list(fixedrange = TRUE)) %>%
+
+
+
+
+
+########################################################################################
+#saving the below old code just in case I want to go back to it
+#this code create four different buckets -- seperating misdemeanor and felony crimes
+#for marijuana vs. non marijuana drug crimes
+
 
 #create dataframe with total number of misdemeanor marijuana arrests per year
 mari_mis_per_year <- mari_misdemeanor_total %>%
@@ -36,27 +123,6 @@ drug_felon_per_year <- mari_felony_total %>%
   mutate(total = drug_offenses - marijuana) %>%
   mutate(group = c("total_drug_felony_no_mari")) %>%
   select(total, year, group)
-
-#bind our dataframes so we have the totals for marijuana arrests and total drug offenses in one dataframe.
-#Also, this pulls the data into the correct shape for the stacked bar chart in R. 
-annual_totals <- rbind(mari_mis_per_year, drug_mis_per_year, mari_felony_per_year, drug_felon_per_year)
-view(annual_totals)
-
-##########################
-#I left off here! I finally have my data in the correct shape, so the next step is to graph it!
-#here's the reference for the stacked bar chart: https://r-charts.com/part-whole/stacked-bar-chart-ggplot2/
-#here's another reference for the chart: https://www.r-graph-gallery.com/48-grouped-barplot-with-ggplot2.html
-
-#create our stacked bar graph
-ggplot(annual_totals, aes(x = year, fill = ))
-
-
-
-
-
-
-
-
 
 
 
