@@ -22,31 +22,36 @@ mari_felony_total <- read_csv("./processed_data/ca_felony_category.csv")
 #create dataframe with total number of misdemeanor marijuana arrests per year
 mari_mis_per_year <- mari_misdemeanor_total %>%
   filter(category == "Marijuana") %>%
-  mutate(group = c("total_marijuana")) %>%
+  mutate(group = "Marijuana") %>%
   select(total, year, group)
 
 #create dataframe with total number of misdemeanor drug arrests per year NOT including marijuana
 drug_mis_per_year <- mari_misdemeanor_total %>%
   filter(category == "Other drug") %>%
-  mutate(group = c("total_drug_no_mari")) %>%
+  mutate(group = "Other") %>%
   select(total, year, group)
 
 #create dataframe with total number of felony marijuana arrests per year
 mari_felony_per_year <- mari_felony_total %>%
   mutate(total = marijuana) %>%
-  mutate(group = c("total_marijuana")) %>%
+  mutate(group = "Marijuana") %>%
   select(total, year, group)
 
 #create dataframe with total number of felony drug arrests per year NOT including marijuana
 drug_felon_per_year <- mari_felony_total %>%
   mutate(total = drug_offenses - marijuana) %>%
-  mutate(group = c("total_drug_no_mari")) %>%
+  mutate(group = "Other") %>%
   select(total, year, group)
 
 #bind our dataframes so we have the totals for marijuana arrests and total drug offenses in one dataframe.
 #Also, this pulls the data into the correct shape for the stacked bar chart in R. 
-annual_totals <- rbind(mari_mis_per_year, drug_mis_per_year, mari_felony_per_year, drug_felon_per_year) %>%
-  filter(year > 1999)
+annual_totals <- bind_rows(mari_mis_per_year, drug_mis_per_year, mari_felony_per_year, drug_felon_per_year) %>%
+  filter(year > 1999) %>%
+  group_by(group,year) %>%
+  summarize(total = sum(total)) %>%
+  mutate(group = factor(group,
+                        levels = c("Other","Marijuana")))
+
 view(annual_totals)
 
 ##########################
@@ -60,28 +65,27 @@ plot1 <- ggplot(annual_totals,
                     y = total, 
                     fill = group,
                     text = paste0("<b>Year: </b>", year,"<br>",
-                                  "<b>Marijuana arrests: </b>", total, "<br>",
-                                  "<b>Other drug arrests: </b>", total)
+                                  "<b>Marijuana arrests: </b>", prettyNum(total, big.mark = ","), "<br>",
+                                  "<b>Other drug arrests: </b>", prettyNum(total, big.mark = ","))
                     )) +
   xlab("") +
-  ylab("Arrests") +
+  ylab("") +
   geom_bar(stat = "identity") +
   theme_minimal(base_size = 14, base_family = "Arial") +
-  scale_fill_brewer(palette = "Set2",
-                    name = "",
-                    labels= c("Other drug arrests", "Marijuana arrests")
-                    ) +
+  scale_fill_brewer(palette = "Set2", direction = -1,
+                    name = "") +
   theme(legend.position = "top",
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()
         ) +
   #scale_y_continuous(labels = comma_format) +
   scale_y_continuous(breaks = c(100000, 200000, 300000), labels = comma) +
-  scale_x_continuous(limits=c(2000, 2020)) +
+  # scale_x_continuous(limits=c(1999, 2021)) +
+  geom_hline(yintercept = 0, size = 0.3) +
   ggtitle("California Drug Arrests") 
   #coord_flip()
 
-unique(annual_totals$group)
+# unique(annual_totals$group)
 
 #require(scales)
 #plot1 + scale_y_continuous(labels = comma)
@@ -91,7 +95,9 @@ unique(annual_totals$group)
 ggplotly(plot1, tooltip = "text") %>% 
   config(displayModeBar = FALSE) %>%
   layout(xaxis = list(fixedrange = TRUE),
-         yaxis = list(fixedrange = TRUE))
+         yaxis = list(fixedrange = TRUE),
+         legend = list(orientation = "h",
+                       y = 1.1))
 
 
   
