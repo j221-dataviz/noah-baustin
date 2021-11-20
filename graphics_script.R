@@ -78,17 +78,9 @@ plot1 <- ggplot(annual_totals,
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()
         ) +
-  #scale_y_continuous(labels = comma_format) +
   scale_y_continuous(breaks = c(100000, 200000, 300000), labels = comma) +
-  # scale_x_continuous(limits=c(1999, 2021)) +
   geom_hline(yintercept = 0, size = 0.3) +
   ggtitle("California Drug Arrests") 
-  #coord_flip()
-
-# unique(annual_totals$group)
-
-#require(scales)
-#plot1 + scale_y_continuous(labels = comma)
 
 ######################
 #Let's create our interactive chart now
