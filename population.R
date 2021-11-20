@@ -98,7 +98,7 @@ names(forecast_2020) <- names(popest_working)
 popest_working <- bind_rows(popest_working, forecast_2020)
 
 # write as csv
-write_csv(popest_working, "processed_data/popest.csv")
+write_csv(popest_working, "processed_data/popest.csv", na = "")
 
               
   

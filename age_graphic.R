@@ -2,7 +2,6 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # load required packages
-library(tidycensus)
 library(tidyverse)
 library(ggplot2)
 library(plotly)
@@ -30,10 +29,10 @@ head(ca_pop)
 #filter so we're only looking at marijuana arrests
 #select the columns I want to use
 mari_misdem_age <- misdem_age %>%
-  mutate(age_to_19 = (age_under_18 + age_18_19)) %>%
+  mutate(age_to_19 = age_under_18 + age_18_19) %>%
   filter(category == "Marijuana") %>%
   select(total, age_to_19, age_20_39, `age_40+`, year) %>%
-  mutate(arrest_type = c("misdem"))
+  mutate(arrest_type = "misdem")
 
 view(mari_misdem_age)
 
@@ -42,15 +41,15 @@ view(mari_misdem_age)
 #filter so we're only looking at marijuana arrests
 #select the columns I want to use
 mari_felony_age <- felony_age %>%
-  mutate(age_to_19 = (age_under_18 + age_18_19)) %>%
+  mutate(age_to_19 = age_under_18 + age_18_19) %>%
   filter(category == "Marijuana") %>%
   select(total, age_to_19, age_20_39, `age_40+`, year) %>%
-  mutate(arrest_type = c("felony"))
+  mutate(arrest_type = "felony")
 
 view(mari_felony_age)
 
 #combine the misdemeanor and felony marijuana arrest data into one dataframe 
-annual_totals_age <- rbind(mari_misdem_age, mari_felony_age)
+annual_totals_age <- bind_rows(mari_misdem_age, mari_felony_age)
 
 #adding up the felony and misdemeanor arrests for each year to express total marijuana arrests
 all_mari_arrests <- annual_totals_age %>%
@@ -93,6 +92,6 @@ arrests_to_pop_pct <- arrests_pct %>%
   select(year, diff_to_19, diff_20_39, diff_40_plus)
 
 #export dataframe to a .csv file to upload into Datawrapper
-write.csv(arrests_to_pop_pct,"/Volumes/T7/Data_Viz/Final_Project/noah-baustin/processed_data/arrests_to_pop_pct.csv", row.names = FALSE)
+write_csv(arrests_to_pop_pct,"processed_data/arrests_to_pop_pct.csv") # changed to readr code (write_csv not write.csv)
 
 #link to Datawrapper heat map: https://www.datawrapper.de/_/iAdWx/

@@ -58,9 +58,9 @@ for (f in files) try({
   year <- as.integer(substr(f,nchar(f)-7,nchar(f)-4))
   tmp <- read_csv(f) %>%
     clean_names() %>%
-    separate(number, into = c("age_18_19","age_20_39"), sep = " ") %>%
-    select(1:6)
-  names(tmp) <- c("category","total","age_under_18","age_18_19","age_20_39","age_40+")
+    separate(number, into = c("age_18_19","age_20_29"), sep = " ") %>%
+    select(1:7)
+  names(tmp) <- c("category","total","age_under_18","age_18_19","age_20_29","age_30_39","age_40+")
   tmp <- tmp %>%
     filter(grepl("total|drug offenses|marijuana",category,ignore.case = TRUE)) %>%
     mutate(year = year,
@@ -128,9 +128,9 @@ for (f in files) try({
   year <- as.integer(substr(f,nchar(f)-7,nchar(f)-4))
   tmp <- read_csv(f) %>%
     clean_names() %>%
-    separate(number, into = c("age_18_19","age_20_39"), sep = " ") %>%
-    select(1:6)
-  names(tmp) <- c("category","total","age_under_18","age_18_19","age_20_39","age_40+")
+    separate(number, into = c("age_18_19","age_20_29"), sep = " ") %>%
+    select(1:7)
+  names(tmp) <- c("category","total","age_under_18","age_18_19","age_20_29","age_30_39","age_40+")
   tmp <- tmp %>%
     filter(grepl("total|other drug|marijuana",category,ignore.case = TRUE)) %>%
     mutate(year = year,
