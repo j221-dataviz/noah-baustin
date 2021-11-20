@@ -91,12 +91,16 @@ ggplotly(plot1) %>%
          yaxis = list(fixedrange = TRUE)) %>%
 
 
-
-
+  
+  
+  
+  
+  
+  
 
 ########################################################################################
 #saving the below old code just in case I want to go back to it
-#this code create four different buckets -- seperating misdemeanor and felony crimes
+#this code create four different buckets -- separating misdemeanor and felony crimes
 #for marijuana vs. non marijuana drug crimes
 
 
