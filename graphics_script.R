@@ -7,6 +7,7 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(htmlwidgets)
+library(scales)
 
 #prevent scientific notation
 options(scipen=999)
@@ -75,20 +76,22 @@ plot1 <- ggplot(annual_totals,
         panel.grid.minor = element_blank()
         ) +
   #scale_y_continuous(labels = comma_format) +
-  scale_y_continuous(breaks = c(100000, 200000, 300000)) +
+  scale_y_continuous(breaks = c(100000, 200000, 300000), labels = comma) +
   scale_x_continuous(limits=c(2000, 2020)) +
   ggtitle("California Drug Arrests") 
   #coord_flip()
 
-require(scales)
-plot1 + scale_y_continuous(labels = comma)
+unique(annual_totals$group)
+
+#require(scales)
+#plot1 + scale_y_continuous(labels = comma)
 
 ######################
 #Let's create our interactive chart now
-ggplotly(plot1) %>% 
+ggplotly(plot1, tooltip = "text") %>% 
   config(displayModeBar = FALSE) %>%
   layout(xaxis = list(fixedrange = TRUE),
-         yaxis = list(fixedrange = TRUE)) %>%
+         yaxis = list(fixedrange = TRUE))
 
 
   
