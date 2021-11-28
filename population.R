@@ -68,6 +68,7 @@ popest_sex  <- bind_rows(popest_sex_to_2009,popest_sex_to_2019) %>%
   select(year, male_population = Male, female_population = Female)
   
 # by age groups
+# NB changed the mutate so that it now breaks up 20_39 into two seperate buckets
 popest_age_to_2009 <- popest_to_2009 %>%
   filter(sex == "Both sexes" & age_label != "Total")
 popest_age_to_2019 <- popest_to_2019_breakdown %>%
@@ -77,9 +78,12 @@ popest_age  <- bind_rows(popest_age_to_2009,popest_age_to_2019) %>%
   select(2:20) %>%
   rowwise() %>%
   mutate(population_age_to_19 = sum(across(2:5)),
-         population_age_20_39 = sum(across(6:9)),
+         population_age_20_29 = sum(across(6:7)),
+         population_age_30_39 = sum(across(8:9)),
          population_age_40_plus = sum(across(10:19))) %>%
-  select(year,20:22)
+  select(year,20:23)
+
+view(popest_age)
 
 # combine and extrapolate for 2020 using defaults from forecast package
 popest_working <- popest_total %>%

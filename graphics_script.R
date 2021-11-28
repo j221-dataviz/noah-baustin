@@ -7,6 +7,7 @@ library(ggplot2)
 library(plotly)
 library(htmlwidgets)
 library(scales)
+library(readr)
 
 #prevent scientific notation
 options(scipen=999)
@@ -14,8 +15,16 @@ options(scipen=999)
 # took your census key out of script
 
 #read in csv's
-mari_misdemeanor_total <- read_csv("./processed_data/ca_misdemeanor_category_age.csv")
-mari_felony_total <- read_csv("./processed_data/ca_felony_category.csv")
+mari_misdemeanor_total <- read_csv("processed_data/ca_misdemeanor_category_age.csv", 
+                                        col_types = cols(total = col_integer(), 
+                                                         age_under_18 = col_integer(), age_18_19 = col_integer(), 
+                                                         age_20_29 = col_integer(), age_30_39 = col_integer(), 
+                                                         `age_40+` = col_integer(), year = col_integer()))
+
+mari_felony_total <- read_csv("processed_data/ca_felony_category.csv", 
+                               col_types = cols(year = col_integer(), 
+                                                all_offenses = col_integer(), drug_offenses = col_integer(), 
+                                                marijuana = col_integer()))
 
 #create dataframe with total number of misdemeanor marijuana arrests per year
 mari_mis_per_year <- mari_misdemeanor_total %>%
@@ -40,6 +49,11 @@ drug_felon_per_year <- mari_felony_total %>%
   mutate(total = drug_offenses - marijuana) %>%
   mutate(group = "Other") %>%
   select(total, year, group)
+
+glimpse(mari_mis_per_year)
+glimpse(drug_mis_per_year)
+glimpse(mari_felony_per_year)
+glimpse(drug_felon_per_year)
 
 #bind our dataframes so we have the totals for marijuana arrests and total drug offenses in one dataframe.
 #Also, this pulls the data into the correct shape for the stacked bar chart in R. 
@@ -81,6 +95,7 @@ plot1 <- ggplot(annual_totals,
   geom_hline(yintercept = 0, size = 0.3) +
   ggtitle("California Drug Arrests") 
 
+
 ######################
 #Let's create our interactive chart now
 ggplotly(plot1, tooltip = "text") %>% 
@@ -89,7 +104,7 @@ ggplotly(plot1, tooltip = "text") %>%
          yaxis = list(fixedrange = TRUE),
          hovermode = "x", # this is what makes both tool tips appear at same point on x axis
          legend = list(orientation = "h",
-                       y = 1.1))
+                       y = 1.06))
 
 
   
