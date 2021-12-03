@@ -20,19 +20,19 @@ libary(htmlwidgets)
 options(scipen=999)
 
 #read in csv's
-ca_misdemeanors <- read_csv("/Volumes/T7/Data_Viz/Final_Project/noah-baustin/processed_data/ca_misdemeanor_category_age.csv", 
+ca_misdemeanors <- read_csv("processed_data/ca_misdemeanor_category_age.csv", 
                                         col_types = cols(total = col_integer(), 
                                         age_under_18 = col_integer(), age_18_19 = col_integer(), 
                                         age_20_29 = col_integer(), age_30_39 = col_integer(), 
                                         `age_40+` = col_integer(), year = col_integer()))
 
-ca_felony_category <- read_csv("/Volumes/T7/Data_Viz/Final_Project/noah-baustin/processed_data/ca_felony_category.csv", 
+ca_felony_category <- read_csv("processed_data/ca_felony_category.csv", 
                                col_types = cols(year = col_integer(), 
                                            all_offenses = col_integer(), 
                                            drug_offenses = col_integer(), 
                                            marijuana = col_integer()))
 
-popest <- read_csv("/Volumes/T7/Data_Viz/Final_Project/noah-baustin/processed_data/popest.csv", 
+popest <- read_csv("processed_data/popest.csv", 
                    col_types = cols(year = col_integer(), 
                                     total_population = col_integer(), 
                                     male_population = col_integer(), 
@@ -78,27 +78,31 @@ combined_data <- combined_data %>%
 
 #create a column with my per 100K rate of arrests
 combined_data <- combined_data %>%
-  mutate(mari_arrests_per_100K = round(marijuana_arrests / total_population * 100000, digits = 0)) %>%
+  mutate(mari_arrests_per_100K = round(marijuana_arrests / total_population * 100000, digits = 0))
+
+glimpse(combined_data)
 
 #create my static graphic
 plot2 <- ggplot(combined_data, 
        aes(x = year,
            y = mari_arrests_per_100K,
+           color = type,
            text = paste0("<b>Year: </b>", year,"<br>",
-                         "<b>Arrests per 100K: </b>", prettyNum(mari_arrests_per_100K, big.mark = ","))
+                         "<b>Arrests per 100K: </b>", prettyNum(mari_arrests_per_100K, big.mark = ",")),
+           group = type
            )) +
+  geom_point() +
+  geom_line() +
   xlab("") +
-  ylab("Arrests") +
+  ylab("") +
   theme_minimal(base_size = 14, base_family = "Arial") +
-  geom_line(aes(color = type)) +
-  geom_point(aes(color = type)) +
-  scale_color_brewer(name = "", palette = "Set1") +
+  scale_color_brewer(name = "", palette = "Set1", labels = c("All Arrests", "Felony", "Misdemeanor")) +
   theme(legend.position = "top",
         panel.grid.major.x = element_blank(), # changed here so we can see y axis grid lines
         panel.grid.minor.x = element_blank() # makes chart easier to read
   ) +
   scale_x_continuous(breaks = c(2000, 2005, 2010, 2015, 2020)) +
-  scale_color_discrete(name = "", labels = c("All Arrests", "Felony", "Misdemeanor")) +
+  # scale_color_discrete(name = "", labels = c("All Arrests", "Felony", "Misdemeanor")) +
   geom_hline(yintercept = 0, size = 0.3) +
   ggtitle("California marijuana related arrests per 100K people") 
 
@@ -114,7 +118,7 @@ plot2_interact <- ggplotly(plot2, tooltip = "text") %>%
 #save our graphic
 ######NOTE: not working right now!!
 saveWidget(plot2_interact, 
-           "ca_arrests_per_cap", 
+           "ca_arrests_per_cap.html", 
            selfcontained = TRUE, 
            libdir = NULL, background = "white")
 
