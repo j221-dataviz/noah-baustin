@@ -1,9 +1,3 @@
-#####
-#TO DO ON THIS: 
-  #change the legend names
-  #get the line to work in interactive version
-  #save out so I can embed in webpage
-
 # set working directory to the folder containing this script
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
@@ -60,7 +54,7 @@ misdem_marijuana <- ca_misdemeanors %>%
 #create a total arrests dataframe
 total_arrests <- felony_marijuana %>%
   left_join(misdem_marijuana, by = "year") %>%
-  mutate(type = "all_arrests") %>%
+  mutate(type = "all arrests") %>%
   mutate(marijuana_arrests = marijuana_arrests.x + marijuana_arrests.y) %>%
   select(year, marijuana_arrests, type)
 
@@ -103,10 +97,9 @@ plot2 <- ggplot(combined_data,
   ) +
   scale_x_continuous(breaks = c(2000, 2005, 2010, 2015, 2020)) +
   # scale_color_discrete(name = "", labels = c("All Arrests", "Felony", "Misdemeanor")) +
-  geom_hline(yintercept = 0, size = 0.3) +
-  ggtitle("California marijuana related arrests per 100K people") 
+  geom_hline(yintercept = 0, size = 0.3) #+
+  #ggtitle("California marijuana related arrests per 100K people") 
 
-######################
 #Let's create our interactive chart now
 plot2_interact <- ggplotly(plot2, tooltip = "text") %>% 
   config(displayModeBar = FALSE) %>%
@@ -115,8 +108,7 @@ plot2_interact <- ggplotly(plot2, tooltip = "text") %>%
          legend = list(orientation = "h",
                        y = 1.08))
 
-#save our graphic
-######NOTE: not working right now!!
+#save our graphic out to an html file
 saveWidget(plot2_interact, 
            "ca_arrests_per_cap.html", 
            selfcontained = TRUE, 

@@ -92,13 +92,13 @@ plot1 <- ggplot(annual_totals,
         panel.grid.minor.x = element_blank() # makes chart easier to read
         ) +
   scale_y_continuous(breaks = c(100000, 200000, 300000), labels = comma) +
-  geom_hline(yintercept = 0, size = 0.3) +
-  ggtitle("California Drug Arrests") 
+  geom_hline(yintercept = 0, size = 0.3)
+  #ggtitle("California Drug Arrests") 
 
 
 ######################
 #Let's create our interactive chart now
-ggplotly(plot1, tooltip = "text") %>% 
+plot1_interact <- ggplotly(plot1, tooltip = "text") %>% 
   config(displayModeBar = FALSE) %>%
   layout(xaxis = list(fixedrange = TRUE),
          yaxis = list(fixedrange = TRUE),
@@ -106,7 +106,11 @@ ggplotly(plot1, tooltip = "text") %>%
          legend = list(orientation = "h",
                        y = 1.06))
 
-
+#save our graphic out to an html file
+saveWidget(plot1_interact, 
+           "ca_drug_arrests.html", 
+           selfcontained = TRUE, 
+           libdir = NULL, background = "white")
   
   
   
