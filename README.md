@@ -26,7 +26,7 @@ The per_capita_arrests_graphic.R file contains the data analysis for the Califor
 
 The age_graphic.R file contains the data processing behind the CA marijuana arrests by age group graphic. That data was visualized using Datawrapper.
 
-*** Data Key ***
+Data Key:
 
 For reference, here is a list of types of information that was pulled from the Crime in California reports, and the name of the corresponding table in the reports where you can find that data.
 
