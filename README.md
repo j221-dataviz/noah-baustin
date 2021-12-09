@@ -24,7 +24,7 @@ The graphics_script.R file contains the data analysis for the California Drug Ar
 
 The per_capita_arrests_graphic.R file contains the data analysis for the California marijuana arrests per 100K people graphic and also has the script for plotting that data into the plotly graphic you can see on the site.
 
-The age_graphic.R file contains the data processing behind the CA marijuana arrests by age group graphic. That data was visualized using Datawrapper. 
+The age_graphic.R file contains the data processing behind the CA marijuana arrests by age group graphic. That data was visualized using Datawrapper.
 
 *** Data Key ***
 For reference, here is a list of types of information that was pulled from the Crime in California reports, and the name of the corresponding table in the reports where you can find that data.
