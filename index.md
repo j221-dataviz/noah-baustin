@@ -14,9 +14,9 @@ First let's look at changes in the number of marijuana arrests in the state over
 
 <iframe width="100%" height="600" frameborder="0" scrolling="no" src="ca_arrests_per_cap.html"></iframe>
 
-Before decriminalization in 2011, misdemeanor arrests made up a significant majority of cannabis arrests in California. As we can see, misdeamor arrest numbers dropped dramatically in 2011, which significantly reduced the total number of marijuana arrests in the state.
+Before decriminalization in 2011, misdemeanor arrests made up a significant majority of cannabis arrests in California. As we can see, misdemeanor arrest numbers dropped dramatically in 2011, which significantly reduced the total number of marijuana arrests in the state.
 
-Interestingly, there were more felony marijuana arrests per person in California than misdeamnor arrests from 2011 through 2015. It wasn't until 2016, when the state legalized recreational marijuana, that felony arrests dipped back below misdemeanors.
+Interestingly, there were more felony marijuana arrests per person in California than misdemeanor arrests from 2011 through 2015. It wasn't until 2016, when the state legalized recreational marijuana, that felony arrests dipped back below misdemeanors.
 
 ### California drug arrests
 
